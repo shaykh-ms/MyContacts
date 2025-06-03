@@ -34,6 +34,7 @@ class ContactListViewModel @Inject constructor(
 
 
     fun getLocalContacts() {
+        _state.update { it.copy(isLoading = true) }
         val contacts = contactUtil.getAllContacts().sortedBy { it.name.lowercase() }
         writeLog("getLocalContacts", contacts.toString())
         _state.update {
