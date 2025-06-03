@@ -21,9 +21,11 @@ class ContactRepositoryImpl @Inject constructor(
         try {
             val response = contactApi.getContactList()
             if (response.success) {
-                val contacts = response.Data.users?.map { it?.toContact() }
-                contacts?.let {
-                    Resource.Success(it)
+                val contacts = response.Data.users?.mapNotNull { it?.toContact() }
+                if(contacts!=null){
+                    emit(Resource.Success(contacts))
+                }else{
+                    emit(Resource.Error("Empty List"))
                 }
             } else {
                 emit(Resource.Error("Failed to fetch contacts"))
