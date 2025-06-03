@@ -6,17 +6,17 @@ data class ContactResponse(
 )
 
 data class Data(
-    val date: String,
-    val totalUsers: Int,
-    val users: List<ContactDto>
+    val date: String?,
+    val totalUsers: Int?,
+    val users: List<ContactDto?>?
 )
 
 data class ContactDto(
-    val id: String,
-    val fullName: String,
-    val phone: String,
-    val email: String,
-    val course: String,
-    val enrolledOn: String
+    val id: String?,
+    val fullName: String?,
+    val phone: String?,
+    val email: String?,
+    val course: String?,
+    val enrolledOn: String?
 )
 

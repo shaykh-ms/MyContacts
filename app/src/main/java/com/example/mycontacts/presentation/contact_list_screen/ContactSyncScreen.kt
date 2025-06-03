@@ -24,7 +24,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,7 +50,6 @@ fun ContactSyncScreen(
 ) {
 
     val context = LocalContext.current
-
     var showAddScreen by remember { mutableStateOf(false) }
     var selectedContact by remember { mutableStateOf<Contact?>(null) }
 
@@ -76,7 +74,6 @@ fun ContactSyncScreen(
         }
     }
 
-
     if (showAddScreen) {
         AddContactDialog(
             onDismiss = { showAddScreen = false },
@@ -95,9 +92,6 @@ fun ContactSyncScreen(
             }
         )
     }
-
-
-
 
     Box(
         modifier = Modifier
@@ -169,7 +163,6 @@ fun ContactSyncScreen(
             }
         }
 
-        // Loader overlay at center
         if (state.isLoading) {
             Box(
                 modifier = Modifier
@@ -182,28 +175,8 @@ fun ContactSyncScreen(
                 )
             }
         }
-
     }
-
 }
-/*
-@Composable
-@Preview(
-    showBackground = true,
-)
-fun ContactSyncScreenPreview() {
-
-    ContactSyncScreen(
-        state = ContactState(),
-        event = MutableSharedFlow<ContactUiEvent>(),
-        onEvent = {
-
-        },
-        hasPermission = true,
-        onRequestPermissions = {},
-        //viewModel =
-    )
-}*/
 
 
 

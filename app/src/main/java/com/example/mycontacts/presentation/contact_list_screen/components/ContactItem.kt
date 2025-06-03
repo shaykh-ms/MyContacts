@@ -26,21 +26,25 @@ import com.example.mycontacts.domain.Contact
 import kotlin.random.Random
 
 @Composable
-fun ContactItem(contact: Contact, onClick: (Contact) -> Unit) {
-    val backgroundColor = rememberRandomColor()
+fun ContactItem(
+    contact: Contact,
+    onClick: (Contact) -> Unit
+) {
+    val backgroundColor = getRandomColor()
 
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .clickable { onClick(contact) }
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick(contact) }
     ) {
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 24.dp, top = 12.dp, bottom = 12.dp)
-            ,
+                .padding(start = 24.dp, top = 12.dp, bottom = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Circle with first letter
+
             Box(
                 modifier = Modifier
                     .size(40.dp)
@@ -48,6 +52,7 @@ fun ContactItem(contact: Contact, onClick: (Contact) -> Unit) {
                     .background(backgroundColor),
                 contentAlignment = Alignment.Center
             ) {
+
                 Text(
                     text = contact.name.firstOrNull()?.uppercase() ?: "?",
                     color = Color.White,
@@ -58,7 +63,6 @@ fun ContactItem(contact: Contact, onClick: (Contact) -> Unit) {
 
             Spacer(modifier = Modifier.width(12.dp))
 
-            // Name
             Text(
                 text = contact.name,
                 style = MaterialTheme.typography.bodyLarge,
@@ -72,14 +76,11 @@ fun ContactItem(contact: Contact, onClick: (Contact) -> Unit) {
                 .height(1.dp)
                 .background(Color.Gray.copy(alpha = 0.2f))
         )
-
-
-
     }
 }
 
 @Composable
-fun rememberRandomColor(): Color {
+fun getRandomColor(): Color {
     val colors = listOf(
         Color(0xFFE57373), // Red
         Color(0xFF64B5F6), // Blue
@@ -94,11 +95,8 @@ fun rememberRandomColor(): Color {
 
 
 @Composable
-@Preview(
-    showBackground = true,
-)
+@Preview(showBackground = true)
 fun ContactItemPreview() {
-
     ContactItem(
         contact = Contact(name = "Mohd Shaya", phone = "0000000000", id = "123"),
         onClick = {}

@@ -1,6 +1,7 @@
 package com.example.mycontacts.util
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.Contacts
 import androidx.compose.material.icons.filled.Devices
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -14,6 +15,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 
 enum class Screen(val title: String, val icon: ImageVector) {
     FAVOURITES("favourites", Icons.Default.StarOutline),
-    RECENT("Recent", Icons.Default.RecentActors),
+    RECENT("Recent", Icons.Default.AccessTime),
     CONTACT("contact", Icons.Default.Contacts),
 }

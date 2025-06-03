@@ -15,8 +15,8 @@ object RepositoryModule {
     @Singleton
     @Provides
     fun provideContactRepository(
-        mealApi: ContactService,
+        contactService: ContactService,
     ): ContactRepository {
-        return ContactRepositoryImpl(mealApi)
+        return ContactRepositoryImpl(contactService)
     }
 }

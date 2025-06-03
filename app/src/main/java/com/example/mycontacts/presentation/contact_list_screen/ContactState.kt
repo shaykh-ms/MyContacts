@@ -8,6 +8,5 @@ data class ContactState(
     val contacts: SnapshotStateList<Contact> = mutableStateListOf(),
     val clickedContact: Contact? = null,
     val isLoading: Boolean = false,
-    val query: String = "",
     val error: String? = null
 )

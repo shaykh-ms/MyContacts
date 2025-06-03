@@ -5,8 +5,8 @@ import com.example.mycontacts.domain.Contact
 
 fun ContactDto.toContact(): Contact {
     return Contact(
-        id = this.id,
-        name = this.fullName,
-        phone = this.phone,
+        id = this.id?:"",
+        name = this.fullName?:"",
+        phone = this.phone?:"",
     )
 }

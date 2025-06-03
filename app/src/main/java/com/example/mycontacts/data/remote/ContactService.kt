@@ -7,7 +7,4 @@ interface ContactService {
     @GET("api/contacts")
     suspend fun getContactList(): ContactResponse
 
-    companion object {
-        const val BASE_URL = "https://android-dev-assignment.onrender.com/"
-    }
 }

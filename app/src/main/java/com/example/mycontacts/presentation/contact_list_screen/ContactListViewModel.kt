@@ -24,14 +24,11 @@ class ContactListViewModel @Inject constructor(
     private val contactRepo: ContactRepository
 ) : ViewModel() {
 
-    //var state by mutableStateOf(ContactState())
-
     private val _state = MutableStateFlow(ContactState())
     val state = _state.asStateFlow()
 
     private val _uiEvent = MutableSharedFlow<ContactUiEvent>()
     val uiEvent = _uiEvent.asSharedFlow()
-
 
     fun getLocalContacts() {
         _state.update { it.copy(isLoading = true) }
@@ -43,9 +40,7 @@ class ContactListViewModel @Inject constructor(
                 contacts = contacts.toMutableStateList()
             )
         }
-
     }
-
 
     fun onEvent(event: ContactEvent) {
         when (event) {
@@ -64,6 +59,7 @@ class ContactListViewModel @Inject constructor(
                 syncContact()
 
             }
+
             is ContactEvent.EditContact -> {
                 viewModelScope.launch {
                     withContext(Dispatchers.IO) {
@@ -76,7 +72,6 @@ class ContactListViewModel @Inject constructor(
             }
         }
     }
-
 
     private fun syncContact() {
         viewModelScope.launch {
@@ -109,7 +104,13 @@ class ContactListViewModel @Inject constructor(
                                 listings.forEach { remoteContact ->
                                     val isPresent = localContacts.any {
                                         it.name.equals(remoteContact.name, ignoreCase = true) &&
-                                                it.phone.replace("\\s".toRegex(), "") == remoteContact.phone.replace("\\s".toRegex(), "")
+                                                it.phone.replace(
+                                                    "\\s".toRegex(),
+                                                    ""
+                                                ) == remoteContact.phone.replace(
+                                            "\\s".toRegex(),
+                                            ""
+                                        )
                                     }
 
                                     if (!isPresent) {
@@ -123,17 +124,15 @@ class ContactListViewModel @Inject constructor(
 
                                 if (newContactsAdded) {
                                     getLocalContacts()
-                                    _uiEvent.emit(ContactUiEvent.ShowMessage("Contacts imported"))
+                                    _uiEvent.emit(ContactUiEvent.ShowMessage("Contacts imported."))
                                 } else {
-                                    _uiEvent.emit(ContactUiEvent.ShowMessage("Contacts are already up to date"))
+                                    _uiEvent.emit(ContactUiEvent.ShowMessage("Up to date."))
                                 }
                             }
                         } catch (e: Exception) {
                             _uiEvent.emit(ContactUiEvent.ShowMessage("Error"))
                         }
                     }
-
-
                 }
             }
         }

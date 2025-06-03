@@ -1,6 +1,5 @@
 package com.example.mycontacts.data.repository
 
-import android.net.http.HttpException
 import com.example.mycontacts.data.mapper.toContact
 import com.example.mycontacts.data.remote.ContactService
 import com.example.mycontacts.domain.Contact
@@ -17,13 +16,15 @@ class ContactRepositoryImpl @Inject constructor(
     private val contactApi: ContactService
 ) : ContactRepository {
     override suspend fun getContactListing(): Flow<Resource<List<Contact>>> = flow {
-        emit(Resource.Loading(true))
 
+        emit(Resource.Loading(true))
         try {
             val response = contactApi.getContactList()
             if (response.success) {
-                val contacts = response.Data.users.map { it.toContact() }
-                emit(Resource.Success(contacts))
+                val contacts = response.Data.users?.map { it?.toContact() }
+                contacts?.let {
+                    Resource.Success(it)
+                }
             } else {
                 emit(Resource.Error("Failed to fetch contacts"))
             }

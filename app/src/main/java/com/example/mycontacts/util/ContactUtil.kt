@@ -1,9 +1,9 @@
 package com.example.mycontacts.util
 
-import com.example.mycontacts.domain.Contact
 import android.content.ContentProviderOperation
 import android.content.Context
 import android.provider.ContactsContract
+import com.example.mycontacts.domain.Contact
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -13,7 +13,6 @@ class ContactUtils @Inject constructor(
     @ApplicationContext val context: Context
 ) {
 
-    // Read all contacts from device
     fun getAllContacts(): List<Contact> {
         val contacts = mutableListOf<Contact>()
         val cursor = context.contentResolver.query(
@@ -36,35 +35,38 @@ class ContactUtils @Inject constructor(
         return contacts
     }
 
-
-    // Add a new contact to the device contacts
     fun addContact(name: String, phone: String) {
         val ops = ArrayList<ContentProviderOperation>()
-
         ops.add(
             ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
                 .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
                 .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null)
                 .build()
         )
-
         ops.add(
             ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
                 .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
-                .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
+                .withValue(
+                    ContactsContract.Data.MIMETYPE,
+                    ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE
+                )
                 .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, name)
                 .build()
         )
-
         ops.add(
             ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
                 .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
-                .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
+                .withValue(
+                    ContactsContract.Data.MIMETYPE,
+                    ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE
+                )
                 .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, phone)
-                .withValue(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE)
+                .withValue(
+                    ContactsContract.CommonDataKinds.Phone.TYPE,
+                    ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE
+                )
                 .build()
         )
-
         try {
             context.contentResolver.applyBatch(ContactsContract.AUTHORITY, ops)
         } catch (e: Exception) {
@@ -74,35 +76,34 @@ class ContactUtils @Inject constructor(
 
     fun updateContact(contactId: String, newName: String, newPhone: String) {
         val ops = ArrayList<ContentProviderOperation>()
-
-        // Update display name
         ops.add(
             ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
                 .withSelection(
                     "${ContactsContract.Data.CONTACT_ID}=? AND ${ContactsContract.Data.MIMETYPE}=?",
-                    arrayOf(contactId, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
+                    arrayOf(
+                        contactId,
+                        ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE
+                    )
                 )
                 .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, newName)
                 .build()
         )
-
-        // Update phone number
         ops.add(
             ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
                 .withSelection(
                     "${ContactsContract.Data.CONTACT_ID}=? AND ${ContactsContract.Data.MIMETYPE}=? AND ${ContactsContract.CommonDataKinds.Phone.TYPE}=?",
-                    arrayOf(contactId, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE,
-                        ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE.toString())
+                    arrayOf(
+                        contactId, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE,
+                        ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE.toString()
+                    )
                 )
                 .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, newPhone)
                 .build()
         )
-
         try {
             context.contentResolver.applyBatch(ContactsContract.AUTHORITY, ops)
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
-
 }

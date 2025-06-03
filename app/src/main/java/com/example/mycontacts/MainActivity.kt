@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -34,9 +35,9 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.mycontacts.presentation.contact_list_screen.ContactListViewModel
 import com.example.mycontacts.presentation.contact_list_screen.ContactSyncScreen
 import com.example.mycontacts.ui.theme.MyContactsTheme
-import com.example.mycontacts.presentation.contact_list_screen.ContactListViewModel
 import com.example.mycontacts.util.Screen
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -51,13 +52,14 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         var hasPermission by mutableStateOf(false)
         val permissions = arrayOf(
-           android.Manifest.permission.READ_CONTACTS,
-           android.Manifest.permission.WRITE_CONTACTS
+            android.Manifest.permission.READ_CONTACTS,
+            android.Manifest.permission.WRITE_CONTACTS
         )
 
-        permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
-            hasPermission = result.all { it.value }
-        }
+        permissionLauncher =
+            registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
+                hasPermission = result.all { it.value }
+            }
 
         if (!hasPermissions(permissions)) {
             permissionLauncher.launch(permissions)
@@ -66,17 +68,22 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            MyContactsTheme {
-                Scaffold(
+            Scaffold(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .shadow(elevation = 8.dp, shape = RoundedCornerShape(10.dp))
+                    .background(colorResource(R.color.white))
+            ) { innerPadding ->
+                val viewModel: ContactListViewModel = hiltViewModel()
+                var selectedItemIndex by remember {
+                    mutableIntStateOf(2)
+                }
+
+                Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .shadow(elevation = 8.dp, shape = RoundedCornerShape(10.dp))
-                ) { innerPadding ->
-                    val viewModel: ContactListViewModel = hiltViewModel()
-                    var selectedItemIndex by remember {
-                        mutableIntStateOf(2)
-                    }
-
+                        .background(Color.White)
+                ) {
                     NavigationSuiteScaffold(
                         navigationSuiteItems = {
                             Screen.entries.forEachIndexed { index, screen ->
@@ -89,13 +96,13 @@ class MainActivity : ComponentActivity() {
                                         Icon(
                                             imageVector = screen.icon,
                                             contentDescription = screen.title,
-                                            tint =  colorResource(R.color.black)
+                                            tint = colorResource(R.color.black)
                                         )
                                     },
                                     label = {
                                         Text(
                                             text = screen.title,
-                                            color =   colorResource(R.color.black),
+                                            color = colorResource(R.color.black),
                                             style = TextStyle(
                                                 fontSize = 16.sp,
                                                 fontWeight = FontWeight.Normal,
@@ -104,23 +111,15 @@ class MainActivity : ComponentActivity() {
                                             modifier = Modifier
                                                 .padding(horizontal = 10.dp)
                                         )
-
                                     },
                                 )
-
                             }
-
                         },
-
                         layoutType =
                         NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(
                             currentWindowAdaptiveInfo()
-                        )
-
-
-
-
-
+                        ),
+                        containerColor = colorResource(R.color.white)
                     ) {
 
                         val state by viewModel.state.collectAsStateWithLifecycle()
@@ -134,14 +133,10 @@ class MainActivity : ComponentActivity() {
                             when (selectedItemIndex) {
                                 0 -> {
                                     Text(text = "Favourites")
-
-
                                 }
-
                                 1 -> {
                                     Text(text = "Recent")
                                 }
-
                                 2 -> {
                                     ContactSyncScreen(
                                         state = state,
@@ -150,7 +145,7 @@ class MainActivity : ComponentActivity() {
                                             viewModel.onEvent(event)
 
                                         },
-                                        hasPermission =  hasPermission,
+                                        hasPermission = hasPermission,
                                         onRequestPermissions = {
                                             permissionLauncher.launch(permissions)
                                         }
@@ -162,43 +157,14 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
+
     private fun hasPermissions(perms: Array<String>): Boolean {
         return perms.all {
-            ContextCompat.checkSelfPermission(this, it) == android.content.pm.PackageManager.PERMISSION_GRANTED
+            ContextCompat.checkSelfPermission(
+                this,
+                it
+            ) == android.content.pm.PackageManager.PERMISSION_GRANTED
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MyContactsTheme {
-        Greeting("Android")
     }
 }
