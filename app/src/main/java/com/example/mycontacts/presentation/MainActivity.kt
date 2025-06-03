@@ -1,4 +1,4 @@
-package com.example.mycontacts
+package com.example.mycontacts.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -16,7 +16,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -29,15 +28,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.mycontacts.R
 import com.example.mycontacts.presentation.contact_list_screen.ContactListViewModel
 import com.example.mycontacts.presentation.contact_list_screen.ContactSyncScreen
-import com.example.mycontacts.ui.theme.MyContactsTheme
 import com.example.mycontacts.util.Screen
 import dagger.hilt.android.AndroidEntryPoint
 
